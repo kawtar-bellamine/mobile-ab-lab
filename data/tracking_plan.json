@@ -1,0 +1,43 @@
+{
+  "title": "Tower Stack tracking plan",
+  "version": "1.0",
+  "common_required": ["event_id", "event", "player_id", "ts", "session_id", "app_version"],
+  "events": {
+    "session_start": {
+      "description": "App opened or resumed after 30 s in background",
+      "properties": {"country_tier": {"enum": ["T1", "T2", "T3"]}},
+      "required": ["country_tier"]
+    },
+    "exp_exposure": {
+      "description": "Player assigned to the experiment, logged once at the first session from day 0",
+      "properties": {"experiment": {"type": "string"}, "variant": {"enum": ["control", "continue"]}},
+      "required": ["experiment", "variant"]
+    },
+    "level_end": {
+      "description": "An attempt ends",
+      "properties": {"result": {"enum": ["complete", "fail"]}, "attempt_no": {"type": "integer", "minimum": 1}},
+      "required": ["result", "attempt_no"]
+    },
+    "continue_used": {
+      "description": "Player watched a rewarded ad to continue after a fail (variant 'continue' only)",
+      "properties": {"attempt_no": {"type": "integer", "minimum": 1}},
+      "required": ["attempt_no"]
+    },
+    "ad_impression": {
+      "description": "Ad displayed; revenue is the estimated ad network revenue in USD",
+      "properties": {"format": {"enum": ["interstitial", "rewarded"]},
+                     "revenue_usd": {"type": "number", "minimum": 0, "maximum": 1}},
+      "required": ["format", "revenue_usd"]
+    },
+    "iap_purchase": {
+      "description": "In-app purchase validated by the store",
+      "properties": {"price_usd": {"type": "number", "exclusiveMinimum": 0, "maximum": 100}},
+      "required": ["price_usd"]
+    },
+    "session_end": {
+      "description": "App closed or sent to background for 30 s",
+      "properties": {"duration_s": {"type": "integer", "minimum": 0}},
+      "required": ["duration_s"]
+    }
+  }
+}
